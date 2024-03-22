@@ -1,0 +1,29 @@
+{
+    "paths": {
+        "root_folder": ".",
+        "csv_folder": "SLR",
+        "output_files_folder": "out",
+        "plot_folder": "plots"
+    },
+
+    "csv_import_column_names": {
+        "title": "Title",
+        "publication_year": "Publication Year",
+        "keywords": "Manual Tags"
+    },
+
+    "excluded_keywords": {
+        "excluded_starting_by_keywords_at_csv_import": [
+            "xmlns"
+        ],
+        "excluded_keywords_at_csv_import": [
+            "[fe] full text",
+            "[fe] ⭐ fav",
+            "nan"
+        ],
+        "excluded_keywords_in_plot": [
+            "federated learning"
+        ]
+    }
+}
+
