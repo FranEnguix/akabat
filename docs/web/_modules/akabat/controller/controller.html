@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>akabat.controller.controller &mdash; AKABAT 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            AKABAT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">AKABAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AKABAT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">akabat.controller.controller</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for akabat.controller.controller</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">akabat.view</span> <span class="kn">import</span> <span class="n">ConsoleViewer</span>
+
+<span class="kn">from</span> <span class="nn">akabat.model</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Data</span><span class="p">,</span>
+    <span class="n">UserPreferences</span><span class="p">,</span>
+    <span class="n">PaperLoader</span><span class="p">,</span>
+    <span class="n">CheckpointHandler</span><span class="p">,</span>
+    <span class="n">DBHandler</span><span class="p">,</span>
+    <span class="n">PlotGenerator</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="Controller">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller">[docs]</a>
+<span class="k">class</span> <span class="nc">Controller</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferences_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;preferences.json&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># menu keys are the internal IDs, values are the shown names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_menu</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;exit&quot;</span><span class="p">:</span> <span class="s2">&quot;Exit menu&quot;</span><span class="p">,</span>
+            <span class="c1"># IMPORTS</span>
+            <span class="c1"># &quot;import csv&quot;: &quot;Import one CSV&quot;,</span>
+            <span class="s2">&quot;import all csvs&quot;</span><span class="p">:</span> <span class="s2">&quot;Import all CSVs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;import unique keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;Import unique keywords&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;import keyword group&quot;</span><span class="p">:</span> <span class="s2">&quot;Import keywords groups&quot;</span><span class="p">,</span>
+            <span class="c1"># &quot;import database&quot;: &quot;Import database&quot;,</span>
+            <span class="c1"># GENERATORS</span>
+            <span class="c1"># &quot;generate keywords&quot;: &quot;Generate keywords&quot;,</span>
+            <span class="s2">&quot;generate unique keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;Generate unique keywords&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;generate keyword groups&quot;</span><span class="p">:</span> <span class="s2">&quot;Generate keywords groups&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;generate database&quot;</span><span class="p">:</span> <span class="s2">&quot;Generate database&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;generate plots&quot;</span><span class="p">:</span> <span class="s2">&quot;Generate plots&quot;</span><span class="p">,</span>
+            <span class="c1"># MERGERS</span>
+            <span class="c1"># &quot;merge keyword groups&quot;: &quot;Merge keyword groups&quot;,</span>
+            <span class="c1"># EXCLUSION</span>
+            <span class="s2">&quot;exclude keyword&quot;</span><span class="p">:</span> <span class="s2">&quot;Ban keyword&quot;</span><span class="p">,</span>
+            <span class="c1"># &quot;exclude keywords&quot;: &quot;Exclude list of keywords&quot;,</span>
+            <span class="s2">&quot;remove excluded keyword&quot;</span><span class="p">:</span> <span class="s2">&quot;Unban keyword&quot;</span><span class="p">,</span>
+            <span class="c1"># DELETERS</span>
+            <span class="s2">&quot;delete database&quot;</span><span class="p">:</span> <span class="s2">&quot;Delete database&quot;</span><span class="p">,</span>
+            <span class="c1"># SAVE FILES</span>
+            <span class="s2">&quot;save preferences&quot;</span><span class="p">:</span> <span class="s2">&quot;Save preferences (such as: banned keywords)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;save unique keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;Save unique keywords&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;save keyword groups&quot;</span><span class="p">:</span> <span class="s2">&quot;Save keywords groups&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">:</span> <span class="n">Data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">preferences_file_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="p">:</span> <span class="n">UserPreferences</span> <span class="o">=</span> <span class="n">UserPreferences</span><span class="p">(</span><span class="n">preferences_file_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="p">:</span> <span class="n">UserPreferences</span> <span class="o">=</span> <span class="n">UserPreferences</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="p">:</span> <span class="n">ConsoleViewer</span> <span class="o">=</span> <span class="n">ConsoleViewer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paper_loader</span><span class="p">:</span> <span class="n">PaperLoader</span> <span class="o">=</span> <span class="n">PaperLoader</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="p">:</span> <span class="n">DBHandler</span> <span class="o">=</span> <span class="n">DBHandler</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_generator</span><span class="p">:</span> <span class="n">PlotGenerator</span> <span class="o">=</span> <span class="n">PlotGenerator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kill_akabat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Controller.start">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kill_akabat</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kill_akabat</span><span class="p">:</span>
+            <span class="n">option_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_menu_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_menu</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_menu_option</span><span class="p">(</span><span class="n">option_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.import_all_csvs">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.import_all_csvs">[docs]</a>
+    <span class="k">def</span> <span class="nf">import_all_csvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Imports all CSV files in the folder and stores the result in the</span>
+<span class="sd">        self._raw_paper variable. If self._raw_paper exists, then merges</span>
+<span class="sd">        the imported CSVs with the self._raw_paper pandas.DataFrame. The</span>
+<span class="sd">        result does not contain duplicated papers, because the merging process.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            folder_path (str, optional): The relative or absolute path to</span>
+<span class="sd">            the folder that contains the CSV files to import. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Number of duplicated papers removed during the merge process.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_path</span><span class="p">:</span>
+            <span class="n">folder_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_folder_path</span><span class="p">()</span>
+        <span class="n">csvs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paper_loader</span><span class="o">.</span><span class="n">import_csvs</span><span class="p">(</span>
+            <span class="n">folder_path</span><span class="o">=</span><span class="n">folder_path</span><span class="p">,</span>
+            <span class="n">excluded_keywords_at_csv_import</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_at_csv_import</span><span class="p">,</span>
+            <span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">,</span>
+            <span class="n">import_columns_names</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">csv_import_column_names</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">csvs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">,</span> <span class="n">duplicated_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paper_loader</span><span class="o">.</span><span class="n">merge_csvs</span><span class="p">(</span><span class="n">csvs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">duplicated_number</span></div>
+
+
+<div class="viewcode-block" id="Controller.generate_unique_keywords">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.generate_unique_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_unique_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paper_loader</span><span class="o">.</span><span class="n">get_unique_keywords</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.save_unique_keywords">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.save_unique_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_unique_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">CheckpointHandler</span><span class="o">.</span><span class="n">write_to_json_file</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">output_files_folder</span><span class="si">}</span><span class="s2">/unique_keywords.json&quot;</span><span class="p">,</span>
+            <span class="n">human_readable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.load_unique_keywords">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.load_unique_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_unique_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">CheckpointHandler</span><span class="o">.</span><span class="n">load_from_json_file</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">output_files_folder</span><span class="si">}</span><span class="s2">/unique_keywords.json&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">loaded_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords</span> <span class="o">=</span> <span class="n">loaded_data</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Controller.group_keywords_by_semantic_similarity">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.group_keywords_by_semantic_similarity">[docs]</a>
+    <span class="k">def</span> <span class="nf">group_keywords_by_semantic_similarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">number_clusters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_number_clusters</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">number_clusters</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">distance_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_distance_threshold</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">distance_threshold</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords_groups</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_paper_loader</span><span class="o">.</span><span class="n">group_keywords_by_semantic_similarity</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords</span><span class="p">,</span>
+                        <span class="n">distance_threshold</span><span class="o">=</span><span class="n">distance_threshold</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords_groups</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_paper_loader</span><span class="o">.</span><span class="n">group_keywords_by_semantic_similarity</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords</span><span class="p">,</span>
+                    <span class="n">distance_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">n_clusters</span><span class="o">=</span><span class="n">number_clusters</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.save_keywords_by_semantic_similarity">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.save_keywords_by_semantic_similarity">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_keywords_by_semantic_similarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">CheckpointHandler</span><span class="o">.</span><span class="n">write_to_json_file</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords_groups</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">output_files_folder</span><span class="si">}</span><span class="s2">/keyword_groups.json&quot;</span><span class="p">,</span>
+            <span class="n">human_readable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.load_keywords_by_semantic_similarity">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.load_keywords_by_semantic_similarity">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_keywords_by_semantic_similarity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">loaded_data</span> <span class="o">=</span> <span class="n">CheckpointHandler</span><span class="o">.</span><span class="n">load_from_json_file</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">output_files_folder</span><span class="si">}</span><span class="s2">/keyword_groups.json&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">loaded_data</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords_groups</span> <span class="o">=</span> <span class="n">loaded_data</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Controller.create_and_populate_database">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.create_and_populate_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_and_populate_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">create_database</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">populate_paper_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">populate_keyword_tables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords_groups</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">populate_paper_keyword_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.merge_keyword_groups">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.merge_keyword_groups">[docs]</a>
+    <span class="k">def</span> <span class="nf">merge_keyword_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">unique_keywords_groups</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;You have to load or generate keywords first&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">keyword_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_keyword_groups</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">keyword_groups</span><span class="p">:</span>
+                <span class="n">new_group_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_keyword</span><span class="p">(</span>
+                    <span class="s2">&quot;Enter the new keyword group name: &quot;</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_group_name</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">all_keys_exist</span><span class="p">(</span><span class="n">keyword_groups</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="o">.</span><span class="n">merge_keyword_groups</span><span class="p">(</span><span class="n">keyword_groups</span><span class="p">,</span> <span class="n">new_group_name</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: All keys must exist to merge the groups.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.exclude_keyword">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.exclude_keyword">[docs]</a>
+    <span class="k">def</span> <span class="nf">exclude_keyword</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">excluded_keyword</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_keyword</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">excluded_keyword</span>
+            <span class="ow">and</span> <span class="n">excluded_keyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">excluded_keyword</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Controller.remove_excluded_keyword">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.remove_excluded_keyword">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_excluded_keyword</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">excluded_keyword</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">ask_keyword</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">excluded_keyword</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">excluded_keyword</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.delete_database">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.delete_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">delete_database</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Controller.is_database_created">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.is_database_created">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_database_created</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">is_database_created</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Controller.save_preferences">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.save_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">save_preferences</span><span class="p">(</span><span class="s2">&quot;test.json&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Controller.generate_plots">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.generate_plots">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_plots</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">year_lower_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2023</span><span class="p">,</span>
+        <span class="n">year_upper_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2024</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_database_created</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_generate_trends_lineplot</span><span class="p">(</span>
+                <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+                <span class="n">year_lower_bound</span><span class="o">=</span><span class="n">year_lower_bound</span><span class="p">,</span>
+                <span class="n">year_upper_bound</span><span class="o">=</span><span class="n">year_upper_bound</span><span class="p">,</span>
+                <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+                <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ERROR: Database is not created.&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_generate_trends_lineplot</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">year_lower_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2023</span><span class="p">,</span>
+        <span class="n">year_upper_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2024</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;n</span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2">_trends_in_</span><span class="si">{</span><span class="n">year_lower_bound</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">year_upper_bound</span><span class="si">}</span><span class="s2">.png&quot;</span>
+        <span class="n">save_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">output_files_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">plot_folder</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">df_top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">query_top_groups</span><span class="p">(</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+            <span class="n">year_lower_bound</span><span class="o">=</span><span class="n">year_lower_bound</span><span class="p">,</span>
+            <span class="n">year_upper_bound</span><span class="o">=</span><span class="n">year_upper_bound</span><span class="p">,</span>
+            <span class="n">excluded_keywords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">df_trends</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db_handler</span><span class="o">.</span><span class="n">query_trends_of_groups</span><span class="p">(</span><span class="n">df_top</span><span class="p">)</span>
+        <span class="n">year_title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_years_title</span><span class="p">(</span><span class="n">year_lower_bound</span><span class="p">,</span> <span class="n">year_upper_bound</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_plot_generator</span><span class="o">.</span><span class="n">generate_trends_lineplot</span><span class="p">(</span>
+            <span class="n">df</span><span class="o">=</span><span class="n">df_trends</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Trends of Top </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2"> Groups of Keywords </span><span class="si">{</span><span class="n">year_title</span><span class="si">}</span><span class="s2"> Over the Years&quot;</span><span class="p">,</span>
+            <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;Publication Year&quot;</span><span class="p">,</span>
+            <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;Number of Papers&quot;</span><span class="p">,</span>
+            <span class="n">excluded_keywords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="p">,</span>
+            <span class="n">save_file_path</span><span class="o">=</span><span class="n">save_path</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_years_title</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">year_lower_bound</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">year_upper_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">year_upper_bound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;in </span><span class="si">{</span><span class="n">year_lower_bound</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="n">year_lower_bound</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="n">year_lower_bound</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">year_upper_bound</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<div class="viewcode-block" id="Controller.run_menu_option">
+<a class="viewcode-back" href="../../../api.html#akabat.controller.Controller.run_menu_option">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_menu_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">option_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">option_id</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">option_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_menu</span><span class="p">):</span>
+            <span class="n">option_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_menu</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">option_id</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;exit&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_kill_akabat</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;import all csvs&quot;</span><span class="p">:</span>
+                <span class="n">duplicated_papers_removed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">import_all_csvs</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Removed </span><span class="si">{</span><span class="n">duplicated_papers_removed</span><span class="si">}</span><span class="s2"> and loaded </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_papers</span><span class="p">)</span><span class="si">}</span><span class="s2"> papers.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;import unique keywords&quot;</span><span class="p">:</span>
+                <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_unique_keywords</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">loaded</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loaded.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error loading.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;import keyword group&quot;</span><span class="p">:</span>
+                <span class="n">loaded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_keywords_by_semantic_similarity</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">loaded</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loaded.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error loading.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;generate unique keywords&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generate_unique_keywords</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;generate keyword groups&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">group_keywords_by_semantic_similarity</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;generate database&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_database_created</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_and_populate_database</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;generate plots&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">generate_plots</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;merge keyword groups&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">merge_keyword_groups</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;exclude keyword&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exclude_keyword</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;remove excluded keyword&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">remove_excluded_keyword</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;delete database&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delete_database</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;save preferences&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_preferences</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;save unique keywords&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_unique_keywords</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">option_name</span> <span class="o">==</span> <span class="s2">&quot;save keyword groups&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_keywords_by_semantic_similarity</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_viewer</span><span class="o">.</span><span class="n">display_non_valid_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_menu</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Francisco Enguix.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

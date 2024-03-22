@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Documentation &mdash; AKABAT 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=01f34227"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="History" href="history.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            AKABAT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">AKABAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-akabat.controller">akabat.controller module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.controller.Controller"><code class="docutils literal notranslate"><span class="pre">Controller</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.create_and_populate_database"><code class="docutils literal notranslate"><span class="pre">Controller.create_and_populate_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.delete_database"><code class="docutils literal notranslate"><span class="pre">Controller.delete_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.exclude_keyword"><code class="docutils literal notranslate"><span class="pre">Controller.exclude_keyword()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.generate_plots"><code class="docutils literal notranslate"><span class="pre">Controller.generate_plots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.generate_unique_keywords"><code class="docutils literal notranslate"><span class="pre">Controller.generate_unique_keywords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.group_keywords_by_semantic_similarity"><code class="docutils literal notranslate"><span class="pre">Controller.group_keywords_by_semantic_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.import_all_csvs"><code class="docutils literal notranslate"><span class="pre">Controller.import_all_csvs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.is_database_created"><code class="docutils literal notranslate"><span class="pre">Controller.is_database_created()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.load_keywords_by_semantic_similarity"><code class="docutils literal notranslate"><span class="pre">Controller.load_keywords_by_semantic_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.load_unique_keywords"><code class="docutils literal notranslate"><span class="pre">Controller.load_unique_keywords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.merge_keyword_groups"><code class="docutils literal notranslate"><span class="pre">Controller.merge_keyword_groups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.remove_excluded_keyword"><code class="docutils literal notranslate"><span class="pre">Controller.remove_excluded_keyword()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.run_menu_option"><code class="docutils literal notranslate"><span class="pre">Controller.run_menu_option()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.save_keywords_by_semantic_similarity"><code class="docutils literal notranslate"><span class="pre">Controller.save_keywords_by_semantic_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.save_preferences"><code class="docutils literal notranslate"><span class="pre">Controller.save_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.save_unique_keywords"><code class="docutils literal notranslate"><span class="pre">Controller.save_unique_keywords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.controller.Controller.start"><code class="docutils literal notranslate"><span class="pre">Controller.start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-akabat.model">akabat.model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.model.CheckpointHandler"><code class="docutils literal notranslate"><span class="pre">CheckpointHandler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.CheckpointHandler.load_from_json_file"><code class="docutils literal notranslate"><span class="pre">CheckpointHandler.load_from_json_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.CheckpointHandler.write_to_json_file"><code class="docutils literal notranslate"><span class="pre">CheckpointHandler.write_to_json_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.model.DBHandler"><code class="docutils literal notranslate"><span class="pre">DBHandler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.build_query"><code class="docutils literal notranslate"><span class="pre">DBHandler.build_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.create_database"><code class="docutils literal notranslate"><span class="pre">DBHandler.create_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.delete_database"><code class="docutils literal notranslate"><span class="pre">DBHandler.delete_database()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.get_unique_years"><code class="docutils literal notranslate"><span class="pre">DBHandler.get_unique_years()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.is_database_created"><code class="docutils literal notranslate"><span class="pre">DBHandler.is_database_created()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.limit_query"><code class="docutils literal notranslate"><span class="pre">DBHandler.limit_query()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.populate_keyword_tables"><code class="docutils literal notranslate"><span class="pre">DBHandler.populate_keyword_tables()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.populate_paper_keyword_table"><code class="docutils literal notranslate"><span class="pre">DBHandler.populate_paper_keyword_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.populate_paper_table"><code class="docutils literal notranslate"><span class="pre">DBHandler.populate_paper_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.query_count_unique_papers_per_group"><code class="docutils literal notranslate"><span class="pre">DBHandler.query_count_unique_papers_per_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.query_count_unique_papers_per_group_per_year"><code class="docutils literal notranslate"><span class="pre">DBHandler.query_count_unique_papers_per_group_per_year()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.query_tendencies_of_keywords"><code class="docutils literal notranslate"><span class="pre">DBHandler.query_tendencies_of_keywords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.query_top_groups"><code class="docutils literal notranslate"><span class="pre">DBHandler.query_top_groups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.query_trends_of_groups"><code class="docutils literal notranslate"><span class="pre">DBHandler.query_trends_of_groups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.DBHandler.regenerate_keyword_tables"><code class="docutils literal notranslate"><span class="pre">DBHandler.regenerate_keyword_tables()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.model.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.Data.all_keys_exist"><code class="docutils literal notranslate"><span class="pre">Data.all_keys_exist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.Data.keywords"><code class="docutils literal notranslate"><span class="pre">Data.keywords</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.Data.merge_keyword_groups"><code class="docutils literal notranslate"><span class="pre">Data.merge_keyword_groups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.Data.unique_keywords"><code class="docutils literal notranslate"><span class="pre">Data.unique_keywords</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.Data.unique_keywords_groups"><code class="docutils literal notranslate"><span class="pre">Data.unique_keywords_groups</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.model.PaperLoader"><code class="docutils literal notranslate"><span class="pre">PaperLoader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.create_keywords"><code class="docutils literal notranslate"><span class="pre">PaperLoader.create_keywords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.get_keyword_counts"><code class="docutils literal notranslate"><span class="pre">PaperLoader.get_keyword_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.get_unique_keywords"><code class="docutils literal notranslate"><span class="pre">PaperLoader.get_unique_keywords()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.group_keywords_by_semantic_similarity"><code class="docutils literal notranslate"><span class="pre">PaperLoader.group_keywords_by_semantic_similarity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.import_csv"><code class="docutils literal notranslate"><span class="pre">PaperLoader.import_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.import_csvs"><code class="docutils literal notranslate"><span class="pre">PaperLoader.import_csvs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.merge_csvs"><code class="docutils literal notranslate"><span class="pre">PaperLoader.merge_csvs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.parse_keyword"><code class="docutils literal notranslate"><span class="pre">PaperLoader.parse_keyword()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PaperLoader.remove_duplicates"><code class="docutils literal notranslate"><span class="pre">PaperLoader.remove_duplicates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.model.PlotGenerator"><code class="docutils literal notranslate"><span class="pre">PlotGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.PlotGenerator.generate_trends_lineplot"><code class="docutils literal notranslate"><span class="pre">PlotGenerator.generate_trends_lineplot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.model.UserPreferences"><code class="docutils literal notranslate"><span class="pre">UserPreferences</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.UserPreferences.load_preferences"><code class="docutils literal notranslate"><span class="pre">UserPreferences.load_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.model.UserPreferences.save_preferences"><code class="docutils literal notranslate"><span class="pre">UserPreferences.save_preferences()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-akabat.view">akabat.view module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#akabat.view.ConsoleViewer"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_distance_threshold"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_distance_threshold()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_file_path"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_file_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_folder_path"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_folder_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_keyword"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_keyword()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_keyword_groups"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_keyword_groups()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_menu_option"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_menu_option()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_number_clusters"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_number_clusters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.ask_path"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.ask_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.display_menu"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.display_menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.display_non_valid_option"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.display_non_valid_option()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.validate_float_user_input"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.validate_float_user_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.validate_int_user_input"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.validate_int_user_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#akabat.view.ConsoleViewer.validate_user_input"><code class="docutils literal notranslate"><span class="pre">ConsoleViewer.validate_user_input()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">AKABAT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-documentation">
+<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Link to this heading"></a></h1>
+<section id="module-akabat.controller">
+<span id="akabat-controller-module"></span><h2>akabat.controller module<a class="headerlink" href="#module-akabat.controller" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.controller.Controller">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.controller.</span></span><span class="sig-name descname"><span class="pre">Controller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preferences_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'preferences.json'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.create_and_populate_database">
+<span class="sig-name descname"><span class="pre">create_and_populate_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.create_and_populate_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.create_and_populate_database" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.delete_database">
+<span class="sig-name descname"><span class="pre">delete_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.delete_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.delete_database" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.exclude_keyword">
+<span class="sig-name descname"><span class="pre">exclude_keyword</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.exclude_keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.exclude_keyword" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.generate_plots">
+<span class="sig-name descname"><span class="pre">generate_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2023</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.generate_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.generate_plots" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.generate_unique_keywords">
+<span class="sig-name descname"><span class="pre">generate_unique_keywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.generate_unique_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.generate_unique_keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.group_keywords_by_semantic_similarity">
+<span class="sig-name descname"><span class="pre">group_keywords_by_semantic_similarity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.group_keywords_by_semantic_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.group_keywords_by_semantic_similarity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.import_all_csvs">
+<span class="sig-name descname"><span class="pre">import_all_csvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.import_all_csvs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.import_all_csvs" title="Link to this definition"></a></dt>
+<dd><p>Imports all CSV files in the folder and stores the result in the
+self._raw_paper variable. If self._raw_paper exists, then merges
+the imported CSVs with the self._raw_paper pandas.DataFrame. The
+result does not contain duplicated papers, because the merging process.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>folder_path (str, optional): The relative or absolute path to
+the folder that contains the CSV files to import. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>int: Number of duplicated papers removed during the merge process.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.is_database_created">
+<span class="sig-name descname"><span class="pre">is_database_created</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.is_database_created"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.is_database_created" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.load_keywords_by_semantic_similarity">
+<span class="sig-name descname"><span class="pre">load_keywords_by_semantic_similarity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.load_keywords_by_semantic_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.load_keywords_by_semantic_similarity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.load_unique_keywords">
+<span class="sig-name descname"><span class="pre">load_unique_keywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.load_unique_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.load_unique_keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.merge_keyword_groups">
+<span class="sig-name descname"><span class="pre">merge_keyword_groups</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.merge_keyword_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.merge_keyword_groups" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.remove_excluded_keyword">
+<span class="sig-name descname"><span class="pre">remove_excluded_keyword</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.remove_excluded_keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.remove_excluded_keyword" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.run_menu_option">
+<span class="sig-name descname"><span class="pre">run_menu_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.run_menu_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.run_menu_option" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.save_keywords_by_semantic_similarity">
+<span class="sig-name descname"><span class="pre">save_keywords_by_semantic_similarity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.save_keywords_by_semantic_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.save_keywords_by_semantic_similarity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.save_preferences">
+<span class="sig-name descname"><span class="pre">save_preferences</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.save_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.save_preferences" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.save_unique_keywords">
+<span class="sig-name descname"><span class="pre">save_unique_keywords</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.save_unique_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.save_unique_keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.controller.Controller.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/controller/controller.html#Controller.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.controller.Controller.start" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-akabat.model">
+<span id="akabat-model-module"></span><h2>akabat.model module<a class="headerlink" href="#module-akabat.model" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.model.CheckpointHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.model.</span></span><span class="sig-name descname"><span class="pre">CheckpointHandler</span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#CheckpointHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.CheckpointHandler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.CheckpointHandler.load_from_json_file">
+<span class="sig-name descname"><span class="pre">load_from_json_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/data_handler.html#CheckpointHandler.load_from_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.CheckpointHandler.load_from_json_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.CheckpointHandler.write_to_json_file">
+<span class="sig-name descname"><span class="pre">write_to_json_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">human_readable</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#CheckpointHandler.write_to_json_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.CheckpointHandler.write_to_json_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.model.DBHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.model.</span></span><span class="sig-name descname"><span class="pre">DBHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Review.db'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.build_query">
+<span class="sig-name descname"><span class="pre">build_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.build_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.build_query" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.create_database">
+<span class="sig-name descname"><span class="pre">create_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.create_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.create_database" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.delete_database">
+<span class="sig-name descname"><span class="pre">delete_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.delete_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.delete_database" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.get_unique_years">
+<span class="sig-name descname"><span class="pre">get_unique_years</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Cursor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.get_unique_years"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.get_unique_years" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.is_database_created">
+<span class="sig-name descname"><span class="pre">is_database_created</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.is_database_created"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.is_database_created" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.limit_query">
+<span class="sig-name descname"><span class="pre">limit_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.limit_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.limit_query" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.populate_keyword_tables">
+<span class="sig-name descname"><span class="pre">populate_keyword_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword_semantic_goups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.populate_keyword_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.populate_keyword_tables" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.populate_paper_keyword_table">
+<span class="sig-name descname"><span class="pre">populate_paper_keyword_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.populate_paper_keyword_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.populate_paper_keyword_table" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.populate_paper_table">
+<span class="sig-name descname"><span class="pre">populate_paper_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.populate_paper_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.populate_paper_table" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.query_count_unique_papers_per_group">
+<span class="sig-name descname"><span class="pre">query_count_unique_papers_per_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.query_count_unique_papers_per_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.query_count_unique_papers_per_group" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.query_count_unique_papers_per_group_per_year">
+<span class="sig-name descname"><span class="pre">query_count_unique_papers_per_group_per_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.query_count_unique_papers_per_group_per_year"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.query_count_unique_papers_per_group_per_year" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.query_tendencies_of_keywords">
+<span class="sig-name descname"><span class="pre">query_tendencies_of_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.query_tendencies_of_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.query_tendencies_of_keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.query_top_groups">
+<span class="sig-name descname"><span class="pre">query_top_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.query_top_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.query_top_groups" title="Link to this definition"></a></dt>
+<dd><p>Generates a pandas.DataFrame with the keyword group name (“name” column) and
+the unique paper count (“unique_paper_count” column) of the <cite>limit</cite> groups with
+more number of unique paper counts. The search can be filtered by year and by
+<cite>excluded_keywords</cite> list.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>limit (int, optional): The number of top keyword groups returning. Defaults to 10.
+year_lower_bound (int, optional): Lower bound of year filtering (number included in the search). Defaults to 2024.
+year_upper_bound (int, optional): Upper bound of year filtering (number included in the search). Defaults to 2024.
+excluded_keywords (list[str], optional): List of excluded keyword groups. Defaults to [].</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: The pandas.DataFrame with columns “name” for the keyword groups
+and “unique_paper_count” for the number of unique papers per group.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.query_trends_of_groups">
+<span class="sig-name descname"><span class="pre">query_trends_of_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year_upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.query_trends_of_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.query_trends_of_groups" title="Link to this definition"></a></dt>
+<dd><p>Generates a pandas.DataFrame with the keyword group name (“name” column), the
+publication year of the papers of the group (“publication_year” column) and the
+unique paper count (“unique_paper_count” column) of the groups from the df DataFrame
+to see their tendencies over the years. The search can be filtered by <cite>excluded_keywords</cite> list.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>df (pd.DataFrame): Keyword groups pandas.DataFrame with the group names in the column “name”.
+year_lower_bound (int, optional): Lower bound of year filtering (number included in the search). Defaults to 0.
+year_upper_bound (int, optional): Upper bound of year filtering (number included in the search). Defaults to 3000.
+excluded_keywords (list[str], optional): List of excluded keyword groups. Defaults to [].</p>
+</dd>
+<dt>Returns:</dt><dd><p>pd.DataFrame: The pandas.DataFrame with columns “name” for the keyword groups,
+“publication_year” column for the year of publication and the
+“unique_paper_count” column for the number of unique papers per group per year.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.DBHandler.regenerate_keyword_tables">
+<span class="sig-name descname"><span class="pre">regenerate_keyword_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword_semantic_goups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/db_handler.html#DBHandler.regenerate_keyword_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.DBHandler.regenerate_keyword_tables" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.model.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.model.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><a class="reference internal" href="_modules/akabat/model/data.html#Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.Data" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.Data.all_keys_exist">
+<span class="sig-name descname"><span class="pre">all_keys_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword_groups_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/akabat/model/data.html#Data.all_keys_exist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.Data.all_keys_exist" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="akabat.model.Data.keywords">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">keywords</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#akabat.model.Data.keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.Data.merge_keyword_groups">
+<span class="sig-name descname"><span class="pre">merge_keyword_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword_groups_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_group_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/model/data.html#Data.merge_keyword_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.Data.merge_keyword_groups" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="akabat.model.Data.unique_keywords">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unique_keywords</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#akabat.model.Data.unique_keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="akabat.model.Data.unique_keywords_groups">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unique_keywords_groups</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#akabat.model.Data.unique_keywords_groups" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.model.</span></span><span class="sig-name descname"><span class="pre">PaperLoader</span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.create_keywords">
+<span class="sig-name descname"><span class="pre">create_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords_at_csv_import</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_starting_by_keywords_at_csv_import</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.create_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.create_keywords" title="Link to this definition"></a></dt>
+<dd><p>Creates a list of unique keywords after normalizing the keywords.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>keyword_list (str): List of keywords in a string format with a separator.
+keyword_separator (str): The character that separates keywords.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list[str]: The list of processed unique keyword.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.get_keyword_counts">
+<span class="sig-name descname"><span class="pre">get_keyword_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Series</span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.get_keyword_counts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.get_keyword_counts" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.get_unique_keywords">
+<span class="sig-name descname"><span class="pre">get_unique_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.get_unique_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.get_unique_keywords" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.group_keywords_by_semantic_similarity">
+<span class="sig-name descname"><span class="pre">group_keywords_by_semantic_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unique_keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.group_keywords_by_semantic_similarity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.group_keywords_by_semantic_similarity" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.import_csv">
+<span class="sig-name descname"><span class="pre">import_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords_at_csv_import</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_starting_by_keywords_at_csv_import</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_columns_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.import_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.import_csv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.import_csvs">
+<span class="sig-name descname"><span class="pre">import_csvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords_at_csv_import</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_starting_by_keywords_at_csv_import</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_columns_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keyword_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">';'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.import_csvs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.import_csvs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.merge_csvs">
+<span class="sig-name descname"><span class="pre">merge_csvs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.merge_csvs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.merge_csvs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.parse_keyword">
+<span class="sig-name descname"><span class="pre">parse_keyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.parse_keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.parse_keyword" title="Link to this definition"></a></dt>
+<dd><p>Parses the keyword to remove characters such as “-” and “’” and also
+removes extra spaces and spaces to the beggining and end of keywords.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>keyword (str): The keyword that will be processed.</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: The processed keyword.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PaperLoader.remove_duplicates">
+<span class="sig-name descname"><span class="pre">remove_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">DataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#PaperLoader.remove_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PaperLoader.remove_duplicates" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.model.PlotGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.model.</span></span><span class="sig-name descname"><span class="pre">PlotGenerator</span></span><a class="reference internal" href="_modules/akabat/model/plot_generator.html#PlotGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PlotGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.PlotGenerator.generate_trends_lineplot">
+<span class="sig-name descname"><span class="pre">generate_trends_lineplot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/plot_generator.html#PlotGenerator.generate_trends_lineplot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.PlotGenerator.generate_trends_lineplot" title="Link to this definition"></a></dt>
+<dd><p>Given a pandas.DataFrame with “name”, “publication_year” and “unique_paper_count”
+this function plots a figure with the trends over all years in “publication_year”
+column per group of keywords in “name” column.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>df (pd.DataFrame): The pandas.DataFrame with columns “name”,
+“publication_year” and “unique_paper_count”
+title (str): Title of the resulting plot.
+x_label (str): Displayed label of the X axis of the plot.
+y_label (str): Displayed label of the Y axis of the plot.
+excluded_keywords (list[str], optional): List of keyword groups that will not appear in the plot. Defaults to [].
+save_file_path (str, optional): Path of the resulting plot file. Defaults to None.
+width (int, optional): Width size of the resulting figure. Defaults to 12.
+height (int, optional): Height size of the resulting figure. Defaults to 8.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.model.UserPreferences">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.model.</span></span><span class="sig-name descname"><span class="pre">UserPreferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preferences_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'preferences.json'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/data_handler.html#UserPreferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.UserPreferences" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.UserPreferences.load_preferences">
+<span class="sig-name descname"><span class="pre">load_preferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preferences_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'preferences.json'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/model/data_handler.html#UserPreferences.load_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.UserPreferences.load_preferences" title="Link to this definition"></a></dt>
+<dd><p>Load preferences from the specified JSON file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>preferences_file_path (str): Path to the preferences JSON file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.model.UserPreferences.save_preferences">
+<span class="sig-name descname"><span class="pre">save_preferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alternative_preferences_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/model/data_handler.html#UserPreferences.save_preferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.model.UserPreferences.save_preferences" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-akabat.view">
+<span id="akabat-view-module"></span><h2>akabat.view module<a class="headerlink" href="#module-akabat.view" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">akabat.view.</span></span><span class="sig-name descname"><span class="pre">ConsoleViewer</span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_distance_threshold">
+<span class="sig-name descname"><span class="pre">ask_distance_threshold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Distance</span> <span class="pre">threshold:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_distance_threshold"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_distance_threshold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_file_path">
+<span class="sig-name descname"><span class="pre">ask_file_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">the</span> <span class="pre">file</span> <span class="pre">path:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_file_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_file_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_folder_path">
+<span class="sig-name descname"><span class="pre">ask_folder_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">the</span> <span class="pre">folder</span> <span class="pre">path:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_folder_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_folder_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_keyword">
+<span class="sig-name descname"><span class="pre">ask_keyword</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">the</span> <span class="pre">keyword:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_keyword"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_keyword" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_keyword_groups">
+<span class="sig-name descname"><span class="pre">ask_keyword_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">the</span> <span class="pre">groups</span> <span class="pre">separated</span> <span class="pre">by</span> <span class="pre">a</span> <span class="pre">comma.</span> <span class="pre">Example:</span> <span class="pre">federated</span> <span class="pre">learning,</span> <span class="pre">machine</span> <span class="pre">learning\nGroups</span> <span class="pre">to</span> <span class="pre">merge:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_keyword_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_keyword_groups" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_menu_option">
+<span class="sig-name descname"><span class="pre">ask_menu_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">menu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Select</span> <span class="pre">an</span> <span class="pre">option</span> <span class="pre">number:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_menu_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_menu_option" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_number_clusters">
+<span class="sig-name descname"><span class="pre">ask_number_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Number</span> <span class="pre">of</span> <span class="pre">keywords</span> <span class="pre">groups</span> <span class="pre">(0</span> <span class="pre">to</span> <span class="pre">apply</span> <span class="pre">distance</span> <span class="pre">threshold):</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_number_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_number_clusters" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.ask_path">
+<span class="sig-name descname"><span class="pre">ask_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Enter</span> <span class="pre">the</span> <span class="pre">path:</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.ask_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.ask_path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.display_menu">
+<span class="sig-name descname"><span class="pre">display_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">menu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.display_menu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.display_menu" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.display_non_valid_option">
+<span class="sig-name descname"><span class="pre">display_non_valid_option</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">menu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.display_non_valid_option"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.display_non_valid_option" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.validate_float_user_input">
+<span class="sig-name descname"><span class="pre">validate_float_user_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.validate_float_user_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.validate_float_user_input" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.validate_int_user_input">
+<span class="sig-name descname"><span class="pre">validate_int_user_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.validate_int_user_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.validate_int_user_input" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="akabat.view.ConsoleViewer.validate_user_input">
+<span class="sig-name descname"><span class="pre">validate_user_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/akabat/view/console_viewer.html#ConsoleViewer.validate_user_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#akabat.view.ConsoleViewer.validate_user_input" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="history.html" class="btn btn-neutral float-right" title="History" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Francisco Enguix.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

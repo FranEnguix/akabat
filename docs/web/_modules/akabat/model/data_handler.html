@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>akabat.model.data_handler &mdash; AKABAT 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            AKABAT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">AKABAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AKABAT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">akabat.model.data_handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for akabat.model.data_handler</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">unicodedata</span>
+
+<span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">AgglomerativeClustering</span>
+
+
+<div class="viewcode-block" id="UserPreferences">
+<a class="viewcode-back" href="../../../api.html#akabat.model.UserPreferences">[docs]</a>
+<span class="k">class</span> <span class="nc">UserPreferences</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferences_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;preferences.json&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the UserPreferences.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            preferences_file_path (str): Path to the preferences JSON file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preferences_file_path</span> <span class="o">=</span> <span class="n">preferences_file_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">csv_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_files_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">excluded_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">csv_import_column_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">csv_column_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_preferences</span><span class="p">(</span><span class="n">preferences_file_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UserPreferences.save_preferences">
+<a class="viewcode-back" href="../../../api.html#akabat.model.UserPreferences.save_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">save_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alternative_preferences_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">preferences_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferences_file_path</span>
+        <span class="k">if</span> <span class="n">alternative_preferences_file_path</span><span class="p">:</span>
+            <span class="n">preferences_file_path</span> <span class="o">=</span> <span class="n">alternative_preferences_file_path</span>
+        <span class="n">CheckpointHandler</span><span class="o">.</span><span class="n">write_to_json_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="p">,</span> <span class="n">preferences_file_path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UserPreferences.load_preferences">
+<a class="viewcode-back" href="../../../api.html#akabat.model.UserPreferences.load_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preferences_file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;preferences.json&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load preferences from the specified JSON file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            preferences_file_path (str): Path to the preferences JSON file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">preferences_file_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preferences_file_path</span> <span class="o">=</span> <span class="n">preferences_file_path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span> <span class="o">=</span> <span class="n">CheckpointHandler</span><span class="o">.</span><span class="n">load_from_json_file</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preferences_file_path</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="p">:</span>
+            <span class="n">paths</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">paths</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">root_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;root_folder&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">csv_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;csv_folder&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">output_files_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;output_files_folder&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">plot_folder</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;plot_folder&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">csv_import_column_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;csv_import_column_names&quot;</span><span class="p">,</span> <span class="p">{}</span>
+            <span class="p">)</span>
+
+            <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;excluded_keywords&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">excluded_keywords</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">excluded_keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="s2">&quot;excluded_starting_by_keywords_at_csv_import&quot;</span><span class="p">,</span> <span class="p">[]</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">excluded_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">excluded_keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;excluded_keywords_at_csv_import&quot;</span><span class="p">,</span> <span class="p">[]</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">excluded_keywords_in_plot</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">excluded_keywords</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;excluded_keywords_in_plot&quot;</span><span class="p">,</span> <span class="p">[]</span>
+                <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CheckpointHandler">
+<a class="viewcode-back" href="../../../api.html#akabat.model.CheckpointHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">CheckpointHandler</span><span class="p">:</span>
+
+<div class="viewcode-block" id="CheckpointHandler.write_to_json_file">
+<a class="viewcode-back" href="../../../api.html#akabat.model.CheckpointHandler.write_to_json_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">write_to_json_file</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">human_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">human_readable</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CheckpointHandler.load_from_json_file">
+<a class="viewcode-back" href="../../../api.html#akabat.model.CheckpointHandler.load_from_json_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_from_json_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PaperLoader">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader">[docs]</a>
+<span class="k">class</span> <span class="nc">PaperLoader</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transformer_model</span><span class="p">:</span> <span class="n">SentenceTransformer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;publication_year&quot;</span><span class="p">:</span> <span class="s2">&quot;publication_year&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;keywords&quot;</span><span class="p">:</span> <span class="s2">&quot;keywords&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_column_data_types</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s2">&quot;publication_year&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+            <span class="c1"># &quot;keywords&quot;: list[str],</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="PaperLoader.get_keyword_counts">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.get_keyword_counts">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_keyword_counts</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+        <span class="n">all_keywords</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">keyword</span>
+            <span class="k">for</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span>
+        <span class="p">]</span>
+
+        <span class="n">keyword_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">all_keywords</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+        <span class="n">keyword_counts_filtered</span> <span class="o">=</span> <span class="n">keyword_counts</span>
+        <span class="k">if</span> <span class="n">excluded_keywords</span><span class="p">:</span>
+            <span class="n">keyword_counts_filtered</span> <span class="o">=</span> <span class="n">keyword_counts</span><span class="p">[</span>
+                <span class="o">~</span><span class="n">keyword_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">excluded_keywords</span><span class="p">)</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">keyword_counts_filtered</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.get_unique_keywords">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.get_unique_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_unique_keywords</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">all_keywords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_keyword_counts</span><span class="p">(</span>
+            <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="o">=</span><span class="n">excluded_keywords</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">keyword</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">all_keywords</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">keyword</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluded_keywords</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.group_keywords_by_semantic_similarity">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.group_keywords_by_semantic_similarity">[docs]</a>
+    <span class="k">def</span> <span class="nf">group_keywords_by_semantic_similarity</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">unique_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">distance_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.9</span><span class="p">,</span>
+        <span class="n">n_clusters</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="s2">&quot;all-mpnet-base-v2&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformer_model</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_transformer_model</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transformer_model</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">unique_keywords</span><span class="p">)</span>
+        <span class="n">clustering</span> <span class="o">=</span> <span class="n">AgglomerativeClustering</span><span class="p">(</span>
+            <span class="n">n_clusters</span><span class="o">=</span><span class="n">n_clusters</span><span class="p">,</span>
+            <span class="n">distance_threshold</span><span class="o">=</span><span class="n">distance_threshold</span><span class="p">,</span>
+            <span class="n">compute_full_tree</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span>
+            <span class="n">linkage</span><span class="o">=</span><span class="s2">&quot;ward&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">clustering</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+        <span class="n">cluster_labels</span> <span class="o">=</span> <span class="n">clustering</span><span class="o">.</span><span class="n">labels_</span>
+
+        <span class="n">groups_key_embeddings</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_keywords</span><span class="p">):</span>
+            <span class="n">cluster</span> <span class="o">=</span> <span class="n">cluster_labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">cluster</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">groups_key_embeddings</span><span class="p">:</span>
+                <span class="n">groups_key_embeddings</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">groups_key_embeddings</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">groups_key_embeddings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">groups</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">groups</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.merge_csvs">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.merge_csvs">[docs]</a>
+    <span class="k">def</span> <span class="nf">merge_csvs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">csvs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">concatenated_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">csvs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_duplicates</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">concatenated_df</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.import_csvs">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.import_csvs">[docs]</a>
+    <span class="k">def</span> <span class="nf">import_csvs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">folder_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">excluded_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">import_columns_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">keyword_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span>
+        <span class="n">header</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+        <span class="n">csvs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folder_path</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">):</span>
+                <span class="n">csvs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">import_csv</span><span class="p">(</span>
+                        <span class="n">file_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">folder_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">excluded_keywords_at_csv_import</span><span class="o">=</span><span class="n">excluded_keywords_at_csv_import</span><span class="p">,</span>
+                        <span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="o">=</span><span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">,</span>
+                        <span class="n">import_columns_names</span><span class="o">=</span><span class="n">import_columns_names</span><span class="p">,</span>
+                        <span class="n">keyword_separator</span><span class="o">=</span><span class="n">keyword_separator</span><span class="p">,</span>
+                        <span class="n">separator</span><span class="o">=</span><span class="n">separator</span><span class="p">,</span>
+                        <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">csvs</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.import_csv">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.import_csv">[docs]</a>
+    <span class="k">def</span> <span class="nf">import_csv</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">excluded_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">import_columns_names</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+        <span class="n">keyword_separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span>
+        <span class="n">header</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">csv</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+            <span class="n">file_path</span><span class="p">,</span>
+            <span class="n">sep</span><span class="o">=</span><span class="n">separator</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+            <span class="n">usecols</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">import_columns_names</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+        <span class="p">)</span>
+
+        <span class="n">csv</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_keywords</span><span class="p">(</span>
+                <span class="n">keyword_list</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">import_columns_names</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]]),</span>
+                <span class="n">keyword_separator</span><span class="o">=</span><span class="n">keyword_separator</span><span class="p">,</span>
+                <span class="n">excluded_keywords_at_csv_import</span><span class="o">=</span><span class="n">excluded_keywords_at_csv_import</span><span class="p">,</span>
+                <span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="o">=</span><span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">csv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">import_columns_names</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]])</span>
+
+        <span class="n">inverted_import_columns_names</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">map</span><span class="p">(</span><span class="nb">reversed</span><span class="p">,</span> <span class="n">import_columns_names</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="n">csv</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">inverted_import_columns_names</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">csv</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_data_types</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">csv</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.create_keywords">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.create_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_keywords</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">keyword_list</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">keyword_separator</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">excluded_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">excluded_starting_by_keywords_at_csv_import</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a list of unique keywords after normalizing the keywords.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            keyword_list (str): List of keywords in a string format with a separator.</span>
+<span class="sd">            keyword_separator (str): The character that separates keywords.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: The list of processed unique keyword.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keywords</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">term</span>
+            <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parse_keyword</span><span class="p">,</span> <span class="n">keyword_list</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">keyword_separator</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">term</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">excluded_keywords_at_csv_import</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+                <span class="n">term</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">or</span> <span class="n">term</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">excluded_word</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">excluded_word</span> <span class="ow">in</span> <span class="n">excluded_starting_by_keywords_at_csv_import</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">keywords</span><span class="p">))</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_strip_accents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">c</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;NFD&quot;</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">unicodedata</span><span class="o">.</span><span class="n">category</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;Mn&quot;</span>  <span class="c1"># Mn = Nonspacing_Mark</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="PaperLoader.parse_keyword">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.parse_keyword">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_keyword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parses the keyword to remove characters such as &quot;-&quot; and &quot;&#39;&quot; and also</span>
+<span class="sd">        removes extra spaces and spaces to the beggining and end of keywords.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            keyword (str): The keyword that will be processed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: The processed keyword.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">keyword</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot; and &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">parsed_word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">parsed_word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">parsed_word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">parsed_word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;–&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">parsed_word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;‐&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;λ&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;—&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">)</span>
+        <span class="n">parsed_word</span> <span class="o">=</span> <span class="n">parsed_word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;—&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strip_accents</span><span class="p">(</span><span class="n">parsed_word</span><span class="o">.</span><span class="n">lower</span><span class="p">()))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PaperLoader.remove_duplicates">
+<a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.remove_duplicates">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">total_num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">title_counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+        <span class="n">duplicated_num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">title_counts</span><span class="p">[</span><span class="n">title_counts</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">df_unique</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span>
+        <span class="n">total_num_records_after_drop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_unique</span><span class="p">)</span>
+        <span class="n">expected_unique_papers</span> <span class="o">=</span> <span class="n">total_num_records</span> <span class="o">-</span> <span class="n">duplicated_num_records</span>
+
+        <span class="c1"># Check if the unique df is consistent</span>
+        <span class="c1"># if total_num_records_after_drop != expected_unique_papers:</span>
+        <span class="c1">#     raise ValueError(</span>
+        <span class="c1">#         f&quot;The number of unique papers ({total_num_records_after_drop}) does not match the expected value ({expected_unique_papers}).&quot;</span>
+        <span class="c1">#     )</span>
+
+        <span class="c1"># if debug:</span>
+        <span class="c1">#     print(f&quot;The initial record count is {total_num_papers}, with {duplicated_num_papers} duplicate entries identified and removed. The new DataFrame record count is {total_num_papers_after_drop}.&quot;)</span>
+
+        <span class="k">return</span> <span class="n">df_unique</span><span class="p">,</span> <span class="n">duplicated_num_records</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Francisco Enguix.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

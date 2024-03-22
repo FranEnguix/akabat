@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>akabat.model.db_handler &mdash; AKABAT 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            AKABAT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">AKABAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">AKABAT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">akabat.model.db_handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for akabat.model.db_handler</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="DBHandler">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler">[docs]</a>
+<span class="k">class</span> <span class="nc">DBHandler</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Review.db&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">db_name</span>
+
+<div class="viewcode-block" id="DBHandler.limit_query">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.limit_query">[docs]</a>
+    <span class="k">def</span> <span class="nf">limit_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">limit</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; LIMIT </span><span class="si">{</span><span class="n">limit</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">query</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.build_query">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.build_query">[docs]</a>
+    <span class="k">def</span> <span class="nf">build_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+        <span class="k">return</span> <span class="n">query</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.get_unique_years">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.get_unique_years">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_unique_years</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;SELECT DISTINCT publication_year FROM Paper ORDER BY publication_year ASC&quot;</span>
+        <span class="p">)</span>
+        <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">years</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.is_database_created">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.is_database_created">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_database_created</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.delete_database">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.delete_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_database_created</span><span class="p">():</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.create_database">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.create_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c1"># Create Paper table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;CREATE TABLE Paper (</span>
+<span class="sd">                            paper_id INTEGER PRIMARY KEY,</span>
+<span class="sd">                            title TEXT NOT NULL,</span>
+<span class="sd">                            publication_year INTEGER</span>
+<span class="sd">                        )&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create KeywordGroup table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;CREATE TABLE KeywordGroup (</span>
+<span class="sd">                        group_id INTEGER PRIMARY KEY,</span>
+<span class="sd">                        name TEXT NOT NULL,</span>
+<span class="sd">                        parent_group_id INTEGER,</span>
+<span class="sd">                        FOREIGN KEY (parent_group_id) REFERENCES KeywordGroup(group_id)</span>
+<span class="sd">                    )&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create Keyword table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;CREATE TABLE Keyword (</span>
+<span class="sd">                            keyword_id INTEGER PRIMARY KEY,</span>
+<span class="sd">                            name TEXT NOT NULL,</span>
+<span class="sd">                            group_id INTEGER,</span>
+<span class="sd">                            FOREIGN KEY (group_id) REFERENCES KeywordGroup(group_id)</span>
+<span class="sd">                        )&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create Paper_Keyword table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;CREATE TABLE Paper_Keyword (</span>
+<span class="sd">                            paper_id INTEGER,</span>
+<span class="sd">                            keyword_id INTEGER,</span>
+<span class="sd">                            PRIMARY KEY (paper_id, keyword_id),</span>
+<span class="sd">                            FOREIGN KEY (paper_id) REFERENCES Paper(paper_id),</span>
+<span class="sd">                            FOREIGN KEY (keyword_id) REFERENCES Keyword(keyword_id)</span>
+<span class="sd">                        )&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Commit changes and close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.populate_paper_table">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.populate_paper_table">[docs]</a>
+    <span class="k">def</span> <span class="nf">populate_paper_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;publication_year&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Connect to the SQLite database</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+
+        <span class="c1"># Insert DataFrame records into the Paper table</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">column_names</span><span class="p">]</span><span class="o">.</span><span class="n">to_sql</span><span class="p">(</span><span class="s2">&quot;Paper&quot;</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">if_exists</span><span class="o">=</span><span class="s2">&quot;append&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Commit changes and close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_populate_keyword_group_table</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="p">):</span>
+        <span class="c1"># Create KeywordGroup table and populate it</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS KeywordGroup (</span>
+<span class="sd">                        group_id INTEGER PRIMARY KEY,</span>
+<span class="sd">                        name TEXT NOT NULL,</span>
+<span class="sd">                        parent_group_id INTEGER,</span>
+<span class="sd">                        FOREIGN KEY (parent_group_id) REFERENCES KeywordGroup(group_id)</span>
+<span class="sd">                    )&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">group_id</span><span class="p">,</span> <span class="n">group_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">keyword_semantic_goups</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;INSERT INTO KeywordGroup (group_id, name) VALUES (?, ?)&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="n">group_name</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_populate_keyword_table</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="p">):</span>
+        <span class="c1"># Create Keyword table and populate it</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;CREATE TABLE IF NOT EXISTS Keyword (</span>
+<span class="sd">                            keyword_id INTEGER PRIMARY KEY,</span>
+<span class="sd">                            name TEXT NOT NULL,</span>
+<span class="sd">                            group_id INTEGER,</span>
+<span class="sd">                            FOREIGN KEY (group_id) REFERENCES KeywordGroup(group_id)</span>
+<span class="sd">                        )&quot;&quot;&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="n">keyword_semantic_goups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">group_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;SELECT group_id FROM KeywordGroup WHERE name = ?&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">group_name</span><span class="p">,)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;INSERT INTO Keyword (name, group_id) VALUES (?, ?)&quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">group_id</span><span class="p">),</span>
+                <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_clear_keyword_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">):</span>
+
+        <span class="c1"># Delete all content from KeywordGroup table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;DELETE FROM KeywordGroup&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Update references in Keyword table</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE Keyword SET group_id = NULL&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_populate_keyword_group_table_updating_keyword_table</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+    <span class="p">):</span>
+
+        <span class="c1"># Populate KeywordGroup and update Keyword tables</span>
+        <span class="k">for</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="n">keyword_semantic_goups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Insert or retrieve group_id for the group name</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT group_id FROM KeywordGroup WHERE name = ?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">group_name</span><span class="p">,)</span>
+            <span class="p">)</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">group_id</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="s2">&quot;INSERT INTO KeywordGroup (name) VALUES (?)&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">group_name</span><span class="p">,)</span>
+                <span class="p">)</span>
+                <span class="n">group_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span>
+
+            <span class="c1"># Update the group_id for keywords</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                    <span class="s2">&quot;UPDATE Keyword SET group_id = ? WHERE name = ?&quot;</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">group_id</span><span class="p">,</span> <span class="n">keyword</span><span class="p">),</span>
+                <span class="p">)</span>
+
+<div class="viewcode-block" id="DBHandler.regenerate_keyword_tables">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.regenerate_keyword_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">regenerate_keyword_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_keyword_tables</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_keyword_group_table_updating_keyword_table</span><span class="p">(</span>
+            <span class="n">cursor</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Commit changes and close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.populate_keyword_tables">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.populate_keyword_tables">[docs]</a>
+    <span class="k">def</span> <span class="nf">populate_keyword_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c1"># Populate KeywordGroup and Keyword tables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_keyword_group_table</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_populate_keyword_table</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">keyword_semantic_goups</span><span class="p">)</span>
+
+        <span class="c1"># Commit changes and close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.populate_paper_keyword_table">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.populate_paper_keyword_table">[docs]</a>
+    <span class="k">def</span> <span class="nf">populate_paper_keyword_table</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Connect to the SQLite database</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="c1"># Populate Paper_Keyword table</span>
+        <span class="k">for</span> <span class="n">paper_id</span><span class="p">,</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">],</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="n">keywords</span><span class="p">:</span>
+                <span class="n">keyword_id</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">                    </span><span class="sd">&quot;&quot;&quot;SELECT keyword_id FROM Keyword WHERE name = ?&quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">keyword</span><span class="p">,)</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">keyword_id</span><span class="p">:</span>
+                    <span class="n">keyword_id</span> <span class="o">=</span> <span class="n">keyword_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+<span class="w">                        </span><span class="sd">&quot;&quot;&quot;INSERT INTO Paper_Keyword (paper_id, keyword_id) VALUES (?, ?)&quot;&quot;&quot;</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">paper_id</span><span class="p">,</span> <span class="n">keyword_id</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Keyword not found: </span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.query_count_unique_papers_per_group">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.query_count_unique_papers_per_group">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_count_unique_papers_per_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Connect to the SQLite database</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+
+        <span class="c1"># SQL query to retrieve the top 30 groups with the most unique papers</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT KeywordGroup.name, COUNT(DISTINCT Paper.paper_id) AS paper_count</span>
+<span class="s2">            FROM KeywordGroup</span>
+<span class="s2">            JOIN Keyword ON Keyword.group_id = KeywordGroup.group_id</span>
+<span class="s2">            JOIN Paper_Keyword ON Keyword.keyword_id = Paper_Keyword.keyword_id</span>
+<span class="s2">            JOIN Paper ON Paper_Keyword.paper_id = Paper.paper_id</span>
+<span class="s2">            GROUP BY KeywordGroup.name</span>
+<span class="s2">            ORDER BY paper_count DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+        <span class="c1"># Fetch all results</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+        <span class="c1"># Close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.query_count_unique_papers_per_group_per_year">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.query_count_unique_papers_per_group_per_year">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_count_unique_papers_per_group_per_year</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Connect to the SQLite database</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="n">unique_years</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unique_years</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+        <span class="c1"># Construct the SQL query dynamically</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT KeywordGroup.name,</span>
+<span class="s2">                COUNT(DISTINCT Paper.paper_id) AS total_paper_count,</span>
+<span class="s2">                </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;SUM(CASE WHEN Paper.publication_year = </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2"> THEN 1 ELSE 0 END) AS paper_count_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">year</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">unique_years</span><span class="p">])</span><span class="si">}</span>
+<span class="s2">            FROM KeywordGroup</span>
+<span class="s2">            JOIN Keyword ON Keyword.group_id = KeywordGroup.group_id</span>
+<span class="s2">            JOIN Paper_Keyword ON Keyword.keyword_id = Paper_Keyword.keyword_id</span>
+<span class="s2">            JOIN Paper ON Paper_Keyword.paper_id = Paper.paper_id</span>
+<span class="s2">            GROUP BY KeywordGroup.name</span>
+<span class="s2">            ORDER BY total_paper_count DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+        <span class="c1"># Close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.query_tendencies_of_keywords">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.query_tendencies_of_keywords">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_tendencies_of_keywords</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">result</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Connect to the SQLite database</span>
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="n">unique_years</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_unique_years</span><span class="p">(</span><span class="n">cursor</span><span class="p">)</span>
+
+        <span class="c1"># Construct the SQL query dynamically</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT KeywordGroup.name,</span>
+<span class="s2">                COUNT(DISTINCT Paper.paper_id) AS total_paper_count,</span>
+<span class="s2">                </span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;SUM(CASE WHEN Paper.publication_year = </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2"> THEN 1 ELSE 0 END) AS paper_count_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">, &quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">year</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">unique_years</span><span class="p">])[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span>
+<span class="s2">            FROM KeywordGroup</span>
+<span class="s2">            JOIN Keyword ON Keyword.group_id = KeywordGroup.group_id</span>
+<span class="s2">            JOIN Paper_Keyword ON Keyword.keyword_id = Paper_Keyword.keyword_id</span>
+<span class="s2">            JOIN Paper ON Paper_Keyword.paper_id = Paper.paper_id</span>
+<span class="s2">            GROUP BY KeywordGroup.name</span>
+<span class="s2">            ORDER BY total_paper_count DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+
+        <span class="c1"># Close connection</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.query_top_groups">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.query_top_groups">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_top_groups</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">year_lower_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2024</span><span class="p">,</span>
+        <span class="n">year_upper_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2024</span><span class="p">,</span>
+        <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a pandas.DataFrame with the keyword group name (&quot;name&quot; column) and</span>
+<span class="sd">        the unique paper count (&quot;unique_paper_count&quot; column) of the `limit` groups with</span>
+<span class="sd">        more number of unique paper counts. The search can be filtered by year and by</span>
+<span class="sd">        `excluded_keywords` list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            limit (int, optional): The number of top keyword groups returning. Defaults to 10.</span>
+<span class="sd">            year_lower_bound (int, optional): Lower bound of year filtering (number included in the search). Defaults to 2024.</span>
+<span class="sd">            year_upper_bound (int, optional): Upper bound of year filtering (number included in the search). Defaults to 2024.</span>
+<span class="sd">            excluded_keywords (list[str], optional): List of excluded keyword groups. Defaults to [].</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: The pandas.DataFrame with columns &quot;name&quot; for the keyword groups</span>
+<span class="sd">            and &quot;unique_paper_count&quot; for the number of unique papers per group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT KeywordGroup.name, COUNT(DISTINCT Paper.paper_id) AS unique_paper_count</span>
+<span class="s2">            FROM KeywordGroup</span>
+<span class="s2">            JOIN Keyword ON Keyword.group_id = KeywordGroup.group_id</span>
+<span class="s2">            JOIN Paper_Keyword ON Keyword.keyword_id = Paper_Keyword.keyword_id</span>
+<span class="s2">            JOIN Paper ON Paper_Keyword.paper_id = Paper.paper_id</span>
+<span class="s2">            WHERE Paper.publication_year &gt;= </span><span class="si">{</span><span class="n">year_lower_bound</span><span class="si">}</span>
+<span class="s2">            AND Paper.publication_year &lt;= </span><span class="si">{</span><span class="n">year_upper_bound</span><span class="si">}</span>
+<span class="s2">            AND KeywordGroup.name NOT IN (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">excluded_keywords</span><span class="p">])</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">            GROUP BY KeywordGroup.name</span>
+<span class="s2">            ORDER BY unique_paper_count DESC</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="DBHandler.query_trends_of_groups">
+<a class="viewcode-back" href="../../../api.html#akabat.model.DBHandler.query_trends_of_groups">[docs]</a>
+    <span class="k">def</span> <span class="nf">query_trends_of_groups</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">year_lower_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">year_upper_bound</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span>
+        <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a pandas.DataFrame with the keyword group name (&quot;name&quot; column), the</span>
+<span class="sd">        publication year of the papers of the group (&quot;publication_year&quot; column) and the</span>
+<span class="sd">        unique paper count (&quot;unique_paper_count&quot; column) of the groups from the df DataFrame</span>
+<span class="sd">        to see their tendencies over the years. The search can be filtered by `excluded_keywords` list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df (pd.DataFrame): Keyword groups pandas.DataFrame with the group names in the column &quot;name&quot;.</span>
+<span class="sd">            year_lower_bound (int, optional): Lower bound of year filtering (number included in the search). Defaults to 0.</span>
+<span class="sd">            year_upper_bound (int, optional): Upper bound of year filtering (number included in the search). Defaults to 3000.</span>
+<span class="sd">            excluded_keywords (list[str], optional): List of excluded keyword groups. Defaults to [].</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pd.DataFrame: The pandas.DataFrame with columns &quot;name&quot; for the keyword groups,</span>
+<span class="sd">            &quot;publication_year&quot; column for the year of publication and the</span>
+<span class="sd">            &quot;unique_paper_count&quot; column for the number of unique papers per group per year.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT KeywordGroup.name, Paper.publication_year, COUNT(DISTINCT Paper.paper_id) AS unique_paper_count</span>
+<span class="s2">            FROM KeywordGroup</span>
+<span class="s2">            JOIN Keyword ON Keyword.group_id = KeywordGroup.group_id</span>
+<span class="s2">            JOIN Paper_Keyword ON Keyword.keyword_id = Paper_Keyword.keyword_id</span>
+<span class="s2">            JOIN Paper ON Paper_Keyword.paper_id = Paper.paper_id</span>
+<span class="s2">            WHERE KeywordGroup.name IN (</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">excluded_keywords</span><span class="p">])</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">            AND Paper.publication_year &gt;= </span><span class="si">{</span><span class="n">year_lower_bound</span><span class="si">}</span>
+<span class="s2">            AND Paper.publication_year &lt;= </span><span class="si">{</span><span class="n">year_upper_bound</span><span class="si">}</span>
+<span class="s2">            GROUP BY KeywordGroup.name, Paper.publication_year</span>
+<span class="s2">            ORDER BY unique_paper_count, KeywordGroup.name, Paper.publication_year</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+        <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db_name</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Francisco Enguix.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
