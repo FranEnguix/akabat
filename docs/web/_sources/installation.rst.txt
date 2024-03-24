@@ -9,20 +9,20 @@ From sources
 
 The sources for AKABAT can be downloaded from the `Github repo`_.
 
-You can either clone the public repository:
+You can clone the public repository:
 
 .. code-block:: console
 
     $ git clone https://github.com/FranEnguix/akabat
 
 
-To install AKABAT, run this command in your terminal after cloning the project:
+To install AKABAT after cloning the project, go to the downloaded folder (where you can find the setup.py file) and run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install -r requirements.txt
+    $ pip install .
 
-This is the preferred method to install AKABAT, as it will always install the most recent stable release. 
+This is the preferred method to install AKABAT, as it ensures the installation of the latest stable release along with its dependencies.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.

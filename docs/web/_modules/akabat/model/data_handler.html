@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>akabat.model.data_handler &mdash; AKABAT 0.1.0 documentation</title>
+  <title>akabat.model.data_handler &mdash; AKABAT 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -75,10 +75,10 @@
   <h1>Source code for akabat.model.data_handler</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">unicodedata</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
 <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">AgglomerativeClustering</span>
@@ -167,6 +167,7 @@
 
 <div class="viewcode-block" id="CheckpointHandler.write_to_json_file">
 <a class="viewcode-back" href="../../../api.html#akabat.model.CheckpointHandler.write_to_json_file">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">write_to_json_file</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">human_readable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">human_readable</span><span class="p">:</span>
@@ -177,6 +178,7 @@
 
 <div class="viewcode-block" id="CheckpointHandler.load_from_json_file">
 <a class="viewcode-back" href="../../../api.html#akabat.model.CheckpointHandler.load_from_json_file">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load_from_json_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -207,8 +209,11 @@
 <div class="viewcode-block" id="PaperLoader.get_keyword_counts">
 <a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.get_keyword_counts">[docs]</a>
     <span class="k">def</span> <span class="nf">get_keyword_counts</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">excluded_keywords</span><span class="p">:</span>
+            <span class="n">excluded_keywords</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="n">all_keywords</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">keyword</span>
             <span class="k">for</span> <span class="n">keywords</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;keywords&quot;</span><span class="p">]]</span>
@@ -229,8 +234,11 @@
 <div class="viewcode-block" id="PaperLoader.get_unique_keywords">
 <a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.get_unique_keywords">[docs]</a>
     <span class="k">def</span> <span class="nf">get_unique_keywords</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">excluded_keywords</span><span class="p">:</span>
+            <span class="n">excluded_keywords</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="n">all_keywords</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_keyword_counts</span><span class="p">(</span>
             <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">excluded_keywords</span><span class="o">=</span><span class="n">excluded_keywords</span>
         <span class="p">)</span>
@@ -272,7 +280,7 @@
             <span class="n">groups_key_embeddings</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">keyword</span><span class="p">)</span>
 
         <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">groups_key_embeddings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">groups_key_embeddings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">groups</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="k">return</span> <span class="n">groups</span></div>
@@ -417,12 +425,12 @@
 <div class="viewcode-block" id="PaperLoader.remove_duplicates">
 <a class="viewcode-back" href="../../../api.html#akabat.model.PaperLoader.remove_duplicates">[docs]</a>
     <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
-        <span class="n">total_num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="c1"># total_num_records = len(df)</span>
         <span class="n">title_counts</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
         <span class="n">duplicated_num_records</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">title_counts</span><span class="p">[</span><span class="n">title_counts</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">df_unique</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_column_names</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span>
-        <span class="n">total_num_records_after_drop</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_unique</span><span class="p">)</span>
-        <span class="n">expected_unique_papers</span> <span class="o">=</span> <span class="n">total_num_records</span> <span class="o">-</span> <span class="n">duplicated_num_records</span>
+        <span class="c1"># total_num_records_after_drop = len(df_unique)</span>
+        <span class="c1"># expected_unique_papers = total_num_records - duplicated_num_records</span>
 
         <span class="c1"># Check if the unique df is consistent</span>
         <span class="c1"># if total_num_records_after_drop != expected_unique_papers:</span>

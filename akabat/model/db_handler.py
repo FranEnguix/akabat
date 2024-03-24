@@ -317,7 +317,7 @@ class DBHandler:
         limit: int = 10,
         year_lower_bound: int = 2024,
         year_upper_bound: int = 2024,
-        excluded_keywords: list[str] = [],
+        excluded_keywords: list[str] = None,
     ) -> pd.DataFrame:
         """
         Generates a pandas.DataFrame with the keyword group name ("name" column) and
@@ -347,6 +347,9 @@ class DBHandler:
             GROUP BY KeywordGroup.name
             ORDER BY unique_paper_count DESC
         """
+        if not excluded_keywords:
+            excluded_keywords = []
+
         query = self.build_query(query, limit)
 
         conn = sqlite3.connect(self._db_name)
@@ -359,7 +362,7 @@ class DBHandler:
         df: pd.DataFrame,
         year_lower_bound: int = 0,
         year_upper_bound: int = 3000,
-        excluded_keywords: list[str] = [],
+        excluded_keywords: list[str] = None,
     ) -> pd.DataFrame:
         """
         Generates a pandas.DataFrame with the keyword group name ("name" column), the
@@ -378,6 +381,9 @@ class DBHandler:
             "publication_year" column for the year of publication and the
             "unique_paper_count" column for the number of unique papers per group per year.
         """
+        if not excluded_keywords:
+            excluded_keywords = []
+
         query = f"""
             SELECT KeywordGroup.name, Paper.publication_year, COUNT(DISTINCT Paper.paper_id) AS unique_paper_count
             FROM KeywordGroup

@@ -4,8 +4,6 @@ import seaborn as sns
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from akabat.model import DBHandler
-
 
 class PlotGenerator:
 
@@ -15,7 +13,7 @@ class PlotGenerator:
         title: str,
         x_label: str,
         y_label: str,
-        excluded_keywords: list[str] = [],
+        excluded_keywords: list[str] = None,
         save_file_path: str = None,
         width: int = 12,
         height: int = 8,
@@ -36,9 +34,12 @@ class PlotGenerator:
             width (int, optional): Width size of the resulting figure. Defaults to 12.
             height (int, optional): Height size of the resulting figure. Defaults to 8.
         """
+        if not excluded_keywords:
+            excluded_keywords = []
+
         df_filtered = df[~df["name"].isin(excluded_keywords)]
 
-        fig: Figure = plt.figure(figsize=(width, height))
+        _: Figure = plt.figure(figsize=(width, height))
         ax: Axes = sns.lineplot(
             data=df_filtered, x="publication_year", y="unique_paper_count", hue="name"
         )

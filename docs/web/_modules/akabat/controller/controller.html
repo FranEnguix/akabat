@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>akabat.controller.controller &mdash; AKABAT 0.1.0 documentation</title>
+  <title>akabat.controller.controller &mdash; AKABAT 0.1.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
 
@@ -14,7 +14,7 @@
   
         <script src="../../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
         <script src="../../../_static/doctools.js?v=888ff710"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -75,16 +75,12 @@
   <h1>Source code for akabat.controller.controller</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">akabat.view</span> <span class="kn">import</span> <span class="n">ConsoleViewer</span>
+<span class="kn">from</span> <span class="nn">..view</span> <span class="kn">import</span> <span class="n">ConsoleViewer</span>
 
-<span class="kn">from</span> <span class="nn">akabat.model</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Data</span><span class="p">,</span>
-    <span class="n">UserPreferences</span><span class="p">,</span>
-    <span class="n">PaperLoader</span><span class="p">,</span>
-    <span class="n">CheckpointHandler</span><span class="p">,</span>
-    <span class="n">DBHandler</span><span class="p">,</span>
-    <span class="n">PlotGenerator</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">Data</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">CheckpointHandler</span><span class="p">,</span> <span class="n">PaperLoader</span><span class="p">,</span> <span class="n">UserPreferences</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">DBHandler</span>
+<span class="kn">from</span> <span class="nn">..model</span> <span class="kn">import</span> <span class="n">PlotGenerator</span>
 
 
 <div class="viewcode-block" id="Controller">

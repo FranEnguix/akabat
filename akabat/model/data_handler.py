@@ -1,9 +1,9 @@
 import json
 
-import pandas as pd
 import re
 import os
 import unicodedata
+import pandas as pd
 
 from sentence_transformers import SentenceTransformer
 from sklearn.cluster import AgglomerativeClustering
@@ -79,6 +79,7 @@ class UserPreferences:
 
 class CheckpointHandler:
 
+    @staticmethod
     def write_to_json_file(obj, file_path: str, human_readable: bool = True) -> None:
         with open(file_path, "w", encoding="utf-8") as f:
             if human_readable:
@@ -86,6 +87,7 @@ class CheckpointHandler:
             else:
                 json.dump(obj, f)
 
+    @staticmethod
     def load_from_json_file(file_path: str):
         if os.path.isfile(file_path):
             with open(file_path, "r", encoding="utf-8") as f:
@@ -110,8 +112,11 @@ class PaperLoader:
         }
 
     def get_keyword_counts(
-        self, df: pd.DataFrame, excluded_keywords: list[str] = []
+        self, df: pd.DataFrame, excluded_keywords: list[str] = None
     ) -> pd.Series:
+        if not excluded_keywords:
+            excluded_keywords = []
+
         all_keywords = [
             keyword
             for keywords in df[self._column_names["keywords"]]
@@ -129,8 +134,11 @@ class PaperLoader:
         return keyword_counts_filtered
 
     def get_unique_keywords(
-        self, df: pd.DataFrame, excluded_keywords: list[str] = []
+        self, df: pd.DataFrame, excluded_keywords: list[str] = None
     ) -> list[str]:
+        if not excluded_keywords:
+            excluded_keywords = []
+
         all_keywords = self.get_keyword_counts(
             df=df, excluded_keywords=excluded_keywords
         )
@@ -169,7 +177,7 @@ class PaperLoader:
             groups_key_embeddings[cluster].append(keyword)
 
         groups = {}
-        for key, value in groups_key_embeddings.items():
+        for _, value in groups_key_embeddings.items():
             groups[value[0]] = value
 
         return groups
@@ -296,12 +304,12 @@ class PaperLoader:
         return re.sub(r"\s+", " ", self._strip_accents(parsed_word.lower())).strip()
 
     def remove_duplicates(self, df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
-        total_num_records = len(df)
+        # total_num_records = len(df)
         title_counts = df[self._column_names["title"]].value_counts()
         duplicated_num_records = len(title_counts[title_counts > 1])
         df_unique = df.drop_duplicates(subset=self._column_names["title"])
-        total_num_records_after_drop = len(df_unique)
-        expected_unique_papers = total_num_records - duplicated_num_records
+        # total_num_records_after_drop = len(df_unique)
+        # expected_unique_papers = total_num_records - duplicated_num_records
 
         # Check if the unique df is consistent
         # if total_num_records_after_drop != expected_unique_papers:

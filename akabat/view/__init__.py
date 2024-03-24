@@ -1,3 +1,3 @@
-__all__ = ["ConsoleViewer"]
+from .console_viewer import ConsoleViewer
 
-from .console_viewer import *
+__all__ = ["ConsoleViewer"]

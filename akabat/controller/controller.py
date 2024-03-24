@@ -4,9 +4,9 @@ from akabat.view import ConsoleViewer
 
 from akabat.model import (
     Data,
-    UserPreferences,
-    PaperLoader,
     CheckpointHandler,
+    PaperLoader,
+    UserPreferences,
     DBHandler,
     PlotGenerator,
 )
